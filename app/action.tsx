@@ -13,6 +13,8 @@ import {
   Stocks,
   Events,
 } from "@/components/llm-stocks";
+import { Pacman } from "@/components/pacman";
+import { Confetti } from "@/components/confetti";
 
 import {
   runAsyncFnWithoutBlocking,
@@ -113,19 +115,23 @@ async function submitUserMessage(content: string) {
   );
 
   const completion = runOpenAICompletion(openai, {
-    model: "gpt-3.5-turbo",
+    model: "gpt-4-turbo-preview",
     stream: true,
     messages: [
       {
         role: "system",
         content: `\
 You are a stock trading conversation bot and you can help users buy stocks, step by step.
+You can let the user play pacman, as many times as they want.
+You can let the user throw confetti, as many times as they want, to celebrate.
 You and the user can discuss stock prices and the user can adjust the amount of stocks they want to buy, or place an order, in the UI.
 
 Messages inside [] means that it's a UI element or a user event. For example:
 - "[Price of AAPL = 100]" means that an interface of the stock price of AAPL is shown to the user.
 - "[User has changed the amount of AAPL to 10]" means that the user has changed the amount of AAPL to 10 in the UI.
 
+If the user requests playing pacman, call \`play_pacman\` to play pacman.
+If the user requests throwing confetti, call \`throw_confetti\` to throw confetti.
 If the user requests purchasing a stock, call \`show_stock_purchase_ui\` to show the purchase UI.
 If the user just wants the price, call \`show_stock_price\` to show the price.
 If you want to show trending stocks, call \`list_stocks\`.
@@ -141,6 +147,16 @@ Besides that, you can also chat with users and do some calculations if needed.`,
       })),
     ],
     functions: [
+      {
+        name: "play_pacman",
+        description: "Play pacman with the user.",
+        parameters: z.object({}),
+      },
+      {
+        name: "throw_confetti",
+        description: "Throw confetti to the user. Use this to celebrate.",
+        parameters: z.object({}),
+      },
       {
         name: "show_stock_price",
         description:
@@ -260,6 +276,38 @@ Besides that, you can also chat with users and do some calculations if needed.`,
         role: "function",
         name: "list_stocks",
         content: JSON.stringify(events),
+      },
+    ]);
+  });
+
+  completion.onFunctionCall("play_pacman", () => {
+    reply.done(
+      <BotMessage>
+        <Pacman />
+      </BotMessage>,
+    );
+    aiState.done([
+      ...aiState.get(),
+      {
+        role: "function",
+        name: "play_pacman",
+        content: `[User has requested to play pacman]`,
+      },
+    ]);
+  });
+
+  completion.onFunctionCall("throw_confetti", () => {
+    reply.done(
+      <BotMessage>
+        <Confetti />
+      </BotMessage>,
+    );
+    aiState.done([
+      ...aiState.get(),
+      {
+        role: "function",
+        name: "throw_confetti",
+        content: `[User has requested to throw confetti]`,
       },
     ]);
   });

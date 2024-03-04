@@ -33,6 +33,7 @@
     "react-dom": "^18",
     "react-intersection-observer": "^9.8.0",
     "react-pacman": "^0.0.4",
+    "react-swipeable": "^7.0.1",
     "react-textarea-autosize": "^8.5.3",
     "sass": "^1.71.1",
     "tailwind-merge": "^2.2.1",

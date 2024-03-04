@@ -71,6 +71,9 @@ dependencies:
   react-pacman:
     specifier: ^0.0.4
     version: 0.0.4
+  react-swipeable:
+    specifier: ^7.0.1
+    version: 7.0.1(react@18.2.0)
   react-textarea-autosize:
     specifier: ^8.5.3
     version: 8.5.3(@types/react@18.2.61)(react@18.2.0)
@@ -3250,6 +3253,14 @@ packages:
       classnames: 2.5.1
       react: 16.14.0
       react-dom: 16.14.0(react@16.14.0)
+    dev: false
+
+  /react-swipeable@7.0.1(react@18.2.0):
+    resolution: {integrity: sha512-RKB17JdQzvECfnVj9yDZsiYn3vH0eyva/ZbrCZXZR0qp66PBRhtg4F9yJcJTWYT5Adadi+x4NoG53BxKHwIYLQ==}
+    peerDependencies:
+      react: ^16.8.3 || ^17 || ^18
+    dependencies:
+      react: 18.2.0
     dev: false
 
   /react-textarea-autosize@8.5.3(@types/react@18.2.61)(react@18.2.0):
